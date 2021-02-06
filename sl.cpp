@@ -67,6 +67,7 @@ int ACCIDENT  = 0;
 int LOGO      = 0;
 int FLY       = 0;
 int C51       = 0;
+int D51       = 0;
 int SS        = 0; // show animated space ship
 int NTH       = 0; // show nth 
 
@@ -84,7 +85,7 @@ int my_mvaddstr(int y, int x, char *str)
 
 void option(char *str, char *num)
 {
-    extern int ACCIDENT, LOGO, FLY, C51, SS, NTH;
+    extern int ACCIDENT, LOGO, FLY, C51, D51, SS, NTH;
 
     while (*str != '\0') {
         switch (*str++) {
@@ -93,12 +94,13 @@ void option(char *str, char *num)
             case 'l': LOGO     = 1; break;
             case 'c': C51      = 1; break;
 			case 's': SS       = 1; break;
+			case 't': D51	   = 1; break;
 			case 'n': 
 				NTH = 1;
 				if(isdigit(*num)) {
 					num_in = atoi(num);
 				} else {
-					printf("'%s' is not a number.\n", num);
+					printf("'\\%s' is not a number.\n", num);
 					exit(0);
 				}
 				break;
@@ -158,8 +160,9 @@ int main(int argc, char *argv[])
 		else if(SS == 1) {
 			if(add_ss(x) == ERR) break;
 		}
-        else {
-            // if (add_D51(x) == ERR) break;
+		else if(D51 == 1) {
+			if (add_D51(x) == ERR) break;
+		} else {
             if(add_rnd(x, file_name) == ERR) break;
         }
         getch();
