@@ -59,7 +59,7 @@ int add_C51(int x);
 int add_D51(int x);
 int add_sl(int x);
 int add_ss(int x);
-int add_rnd(int x, char* file_name);
+int add_rnd(int x, std::vector<std::string> rows);
 void option(char *str, char *num);
 int my_mvaddstr(int y, int x, char *str);
 
@@ -100,8 +100,8 @@ void option(char *str, char *num)
 				if(isdigit(*num)) {
 					num_in = atoi(num);
 				} else {
-					printf("'\\%s' is not a number.\n", num);
-					exit(0);
+					printf("'%s' is not a number.\n", num);
+					exit(1);
 				}
 				break;
             default:
@@ -129,26 +129,34 @@ int main(int argc, char *argv[])
     scrollok(stdscr, FALSE);
 
     srand (time(NULL));
-	int select = (NTH == 1) ? num_in : rand() % 5;
+	int select = (NTH == 1) ? num_in : rand() % 3;
 
     char* file_name = NULL;
     switch(select) {
         case 0:
-            file_name = "ascii/bus1.txt";
+            file_name = (char*)"ascii/bus1.txt";
             break;
         case 1:
-            file_name = "ascii/plane1.txt";
+            file_name = (char*)"ascii/plane1.txt";
             break;
 		case 2:
-            file_name = "ascii/sub1.txt";
+            file_name = (char*)"ascii/sub1.txt";
             break;
 		case 3:
-			file_name = "ascii/ship1.txt";
+			file_name = (char*)"ascii/ship1.txt";
 			break;
 		default:
-			file_name="ascii/default.txt";
+			file_name = (char*)"ascii/default.txt";
 			break;
     }
+
+	std::vector<std::string> rows;
+    std::ifstream in(file_name);
+    std::string line;
+    while(std::getline(in, line)) {
+        rows.push_back(line);
+    }
+	in.close();
 
     for (x = COLS - 1; ; --x) {
         if (LOGO == 1) {
@@ -163,7 +171,7 @@ int main(int argc, char *argv[])
 		else if(D51 == 1) {
 			if (add_D51(x) == ERR) break;
 		} else {
-            if(add_rnd(x, file_name) == ERR) break;
+            if(add_rnd(x, rows) == ERR) break;
         }
         getch();
         refresh();
@@ -175,15 +183,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-int add_rnd(int x, char* file_name) {    
-    std::vector<std::string> rows;
-    std::ifstream in(file_name);
-    std::string line;
-    while(std::getline(in, line)) {
-        rows.push_back(line);
-    }
-	in.close();
-
+int add_rnd(int x, std::vector<std::string> rows) {
     std::string str(rows[0]);
     int row_length = (int) str.size();
 
@@ -196,11 +196,9 @@ int add_rnd(int x, char* file_name) {
         y = (x / 6) + LINES - (COLS / 8) - rows.size();
     }
 
-    int frame_delay = 5;
-    for (int i = 0; i < rows.size(); i++) {
+    for (unsigned int i = 0; i < rows.size(); i++) {
         my_mvaddstr(y + i, x, (char*)rows.at(i).c_str());
     }
-
 
   return OK;
 }
@@ -312,7 +310,7 @@ int add_D51(int x)
 
 int add_C51(int x)
 {
-    static char *c51[C51PATTERNS][C51HEIGHT + 1]
+    static std::string c51[C51PATTERNS][C51HEIGHT + 1]
         = {{C51STR1, C51STR2, C51STR3, C51STR4, C51STR5, C51STR6, C51STR7,
             C51WH11, C51WH12, C51WH13, C51WH14, C51DEL},
            {C51STR1, C51STR2, C51STR3, C51STR4, C51STR5, C51STR6, C51STR7,
@@ -325,7 +323,7 @@ int add_C51(int x)
             C51WH51, C51WH52, C51WH53, C51WH54, C51DEL},
            {C51STR1, C51STR2, C51STR3, C51STR4, C51STR5, C51STR6, C51STR7,
             C51WH61, C51WH62, C51WH63, C51WH64, C51DEL}};
-    static char *coal[C51HEIGHT + 1]
+    static std::string coal[C51HEIGHT + 1]
         = {COALDEL, COAL01, COAL02, COAL03, COAL04, COAL05,
            COAL06, COAL07, COAL08, COAL09, COAL10, COALDEL};
 
@@ -339,8 +337,8 @@ int add_C51(int x)
         dy = 1;
     }
     for (i = 0; i <= C51HEIGHT; ++i) {
-        my_mvaddstr(y + i, x, c51[(C51LENGTH + x) % C51PATTERNS][i]);
-        my_mvaddstr(y + i + dy, x + 55, coal[i]);
+        my_mvaddstr(y + i, x, (char*)c51[(C51LENGTH + x) % C51PATTERNS][i].c_str());
+        my_mvaddstr(y + i + dy, x + 55, (char*)coal[i].c_str());
     }
     if (ACCIDENT == 1) {
         add_man(y + 3, x + 45);
@@ -353,11 +351,11 @@ int add_C51(int x)
 
 void add_man(int y, int x)
 {
-    static char *man[2][2] = {{"", "(O)"}, {"Help!", "\\O/"}};
+    static std::string man[2][2] = {{"", "(O)"}, {"Help!", "\\O/"}};
     int i;
 
     for (i = 0; i < 2; ++i) {
-        my_mvaddstr(y + i, x, man[(LOGOLENGTH + x) / 12 % 2][i]);
+        my_mvaddstr(y + i, x, (char*)man[(LOGOLENGTH + x) / 12 % 2][i].c_str());
     }
 }
 
