@@ -128,6 +128,12 @@ void print_usage(){
 	printf("\t-h\t\t\t\tshow usage\n"); 
 }
 
+void signal_callback_handler(int signum) {
+	mvcur(0, COLS - 1, LINES - 1, 0);
+    endwin();
+	exit(signum);
+}
+
 int main(int argc, char *argv[])
 {
     int x, i;
@@ -177,6 +183,7 @@ int main(int argc, char *argv[])
 	in.close();
 
     for (x = COLS - 1; ; --x) {
+		signal(SIGINT, signal_callback_handler);
         if (LOGO == 1) {
             if (add_sl(x) == ERR) break;
         }
