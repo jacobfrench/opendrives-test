@@ -85,7 +85,7 @@ int my_mvaddstr(int y, int x, char *str)
 
 void option(char *str, char *num)
 {
-    extern int ACCIDENT, LOGO, FLY, C51, D51, SS, NTH;
+    extern int ACCIDENT, LOGO, FLY, C51, D51, SS, NTH, num_in;
 
     while (*str != '\0') {
         switch (*str++) {

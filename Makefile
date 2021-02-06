@@ -18,4 +18,19 @@ clean:
 	rm -f sl
 
 distclean: clean
-	
+
+package:
+	make clean
+	make
+	mkdir sl_package
+	mkdir sl_package/DEBIAN
+	mkdir sl_package/usr
+	mkdir sl_package/usr/bin
+	touch sl_package/DEBIAN/control
+	cat package_control.txt > sl_package/DEBIAN/control
+
+	cp sl sl_package/usr/bin
+	cp -r ascii/ sl_package/usr/bin
+
+	dpkg -b sl_package
+	rm -rf sl_package/
