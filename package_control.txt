@@ -1,0 +1,7 @@
+Package: sl
+Version: 0.01
+Architecture: all
+Maintainer: Jacob French
+Installed-Size: 2
+Description: sl - a useless command line program
+ When you type sl instead of ls
