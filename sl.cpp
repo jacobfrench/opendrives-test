@@ -123,6 +123,7 @@ void print_usage(){
 	printf("\t-n <0-3>\t\t\tdisplays vehicle by index\n");
 	printf("\t-ss\t\t\t\tdisplays animated space ship\n");
 	printf("\t-F\t\t\t\tvehicle will fly\n");
+	printf("\t-h\t\t\t\tshow usage\n");
 
 }
 
@@ -131,7 +132,7 @@ int main(int argc, char *argv[])
     int x, i;
 
     for (i = 1; i < argc; ++i) {
-        if ((*argv[i] == '-' )&& (i+1 < argc)) {
+        if (*argv[i] == '-' ) {
 			option(argv[i] + 1, argv[i+1]);
         } else {
 			print_usage();
