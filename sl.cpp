@@ -62,6 +62,7 @@ int add_ss(int x);
 int add_rnd(int x, std::vector<std::string> rows);
 void option(char *str, char *num);
 int my_mvaddstr(int y, int x, char *str);
+void print_usage();
 
 int ACCIDENT  = 0;
 int LOGO      = 0;
@@ -86,7 +87,6 @@ int my_mvaddstr(int y, int x, char *str)
 void option(char *str, char *num)
 {
     extern int ACCIDENT, LOGO, FLY, C51, D51, SS, NTH, num_in;
-
     while (*str != '\0') {
         switch (*str++) {
             case 'a': ACCIDENT = 1; break;
@@ -95,13 +95,17 @@ void option(char *str, char *num)
             case 'c': C51      = 1; break;
 			case 's': SS       = 1; break;
 			case 't': D51	   = 1; break;
+			case 'h':
+				print_usage();
+				exit(0);
+				break;
 			case 'n': 
 				NTH = 1;
 				if(isdigit(*num)) {
 					num_in = atoi(num);
 				} else {
-					printf("'%s' is not a number.\n", num);
-					exit(1);
+					print_usage();
+					exit(0);
 				}
 				break;
             default:
@@ -110,14 +114,29 @@ void option(char *str, char *num)
     }
 }
 
+void print_usage(){
+	printf("usage:\n");
+	printf("\tno params \t\t\tdisplays random vehicle\n");
+	printf("\t-t\t\t\t\tdisplays D51 train\n");
+	printf("\t-a\t\t\t\tdisplays D51 train with accident\n");
+	printf("\t-l\t\t\t\tdisplays C51 train\n");
+	printf("\t-n <0-3>\t\t\tdisplays vehicle by index\n");
+	printf("\t-ss\t\t\t\tdisplays animated space ship\n");
+	printf("\t-F\t\t\t\tvehicle will fly\n");
+
+}
+
 int main(int argc, char *argv[])
 {
     int x, i;
 
     for (i = 1; i < argc; ++i) {
-        if (*argv[i] == '-') {
-            option(argv[i] + 1, argv[i+1]);
-        }
+        if ((*argv[i] == '-' )&& (i+1 < argc)) {
+			option(argv[i] + 1, argv[i+1]);
+        } else {
+			print_usage();
+			exit(0);
+		}
     }
 
     initscr(); 
