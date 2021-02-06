@@ -3,9 +3,11 @@
  *        Copyright 1993,1998,2014-2015
  *                  Toyoda Masashi
  *                  (mtoyoda@acm.org)
- *        Last Modified: 2014/06/03
+ *        Last Modified: 2021/02/06
  *========================================
  */
+/* sl version 5.04 : SL now shows random art.                                */
+/*                                              by Jacob French   2021/02/06 */
 /* sl version 5.03 : Fix some more compiler warnings.                        */
 /*                                              by Ryan Jacobs    2015/01/19 */
 /* sl version 5.02 : Fix compiler warnings.                                  */
@@ -38,6 +40,7 @@
 /* sl version 1.00 : SL runs vomiting out smoke.                             */
 /*                                              by Toyoda Masashi 1992/12/11 */
 
+
 #include <curses.h>
 #include <signal.h>
 #include <unistd.h>
@@ -67,8 +70,8 @@ void print_usage();
 int ACCIDENT  = 0;
 int LOGO      = 0;
 int FLY       = 0;
-int C51       = 0;
-int D51       = 0;
+int C51       = 0; // show smaller train
+int D51       = 0; // show original train
 int SS        = 0; // show animated space ship
 int NTH       = 0; // show nth 
 
@@ -121,8 +124,9 @@ void print_usage(){
 	printf("\tno params \t\t\tdisplays random vehicle\n");
 	printf("\t-t\t\t\t\tdisplays D51 train\n");
 	printf("\t-a\t\t\t\tdisplays D51 train with accident\n");
-	printf("\t-l\t\t\t\tdisplays C51 train\n");
-	printf("\t-n <0-3>\t\t\tdisplays vehicle by index\n");
+	printf("\t-c\t\t\t\tdisplays C51 train\n");
+    printf("\t-l\t\t\t\tdisplays LOGO train\n");
+	printf("\t-n <0-7>\t\t\tdisplays vehicle by index\n");
 	printf("\t-ss\t\t\t\tdisplays animated space ship\n");
 	printf("\t-F\t\t\t\tvehicle will fly\n");
 	printf("\t-h\t\t\t\tshow usage\n"); 
@@ -153,7 +157,7 @@ int main(int argc, char *argv[])
     scrollok(stdscr, FALSE);
 
     srand (time(NULL));
-	int select = (NTH == 1) ? num_in : rand() % 3;
+	int select = (NTH == 1) ? num_in : rand() % 7;
 
     char* file_name = NULL;
     switch(select) {
@@ -169,18 +173,36 @@ int main(int argc, char *argv[])
 		case 3:
 			file_name = (char*)"ascii/ship1.txt";
 			break;
+        case 4:
+            D51	= 1;
+            break;
+        case 5:
+            LOGO = 1;
+            break;
+        case 6:
+            C51 = 1;
+            break;
+        case 7:
+            SS = 1;
+            break;
 		default:
-			file_name = (char*)"ascii/default.txt";
+            mvcur(0, COLS - 1, LINES - 1, 0);
+            endwin();
+            print_usage();
+            exit(0);
 			break;
     }
 
-	std::vector<std::string> rows;
-    std::ifstream in(file_name);
-    std::string line;
-    while(std::getline(in, line)) {
-        rows.push_back(line);
+    std::vector<std::string> rows;
+    // we don't need to attempt reading from file if no file was chosen.
+    if(file_name != NULL){
+        std::ifstream in(file_name);
+        std::string line;
+        while(std::getline(in, line)) {
+            rows.push_back(line);
+        }
+        in.close();
     }
-	in.close();
 
     for (x = COLS - 1; ; --x) {
 		signal(SIGINT, signal_callback_handler);
