@@ -109,6 +109,8 @@ void option(char *str, char *num)
 				}
 				break;
             default:
+				print_usage();
+				exit(0);
 				break;
         }
     }
