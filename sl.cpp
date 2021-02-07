@@ -6,7 +6,7 @@
  *        Last Modified: 2021/02/06
  *========================================
  */
-/* sl version 5.04 : SL now shows random art.                                */
+/* sl version 5.04 : SL now shows random art. Added several flag options     */
 /*                                              by Jacob French   2021/02/06 */
 /* sl version 5.03 : Fix some more compiler warnings.                        */
 /*                                              by Ryan Jacobs    2015/01/19 */
