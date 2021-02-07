@@ -73,7 +73,7 @@ int FLY       = 0;
 int C51       = 0; // show smaller train
 int D51       = 0; // show original train
 int SS        = 0; // show animated space ship
-int NTH       = 0; // show nth 
+int NTH       = 0; // show nth ascii animation
 
 int num_in = 0;
 
@@ -119,7 +119,8 @@ void option(char *str, char *num)
     }
 }
 
-void print_usage(){
+void print_usage()
+{
 	printf("usage:\n");
 	printf("\tno params \t\t\tdisplays random vehicle\n");
 	printf("\t-t\t\t\t\tdisplays D51 train\n");
@@ -132,7 +133,8 @@ void print_usage(){
 	printf("\t-h\t\t\t\tshow usage\n"); 
 }
 
-void signal_callback_handler(int signum) {
+void signal_callback_handler(int signum) 
+{
 	mvcur(0, COLS - 1, LINES - 1, 0);
     endwin();
 	exit(signum);
@@ -144,7 +146,7 @@ int main(int argc, char *argv[])
 
     for (i = 1; i < argc; ++i) {
         if (*argv[i] == '-') {
-			option(argv[i] + 1, argv[i+1]);
+		    option(argv[i] + 1, argv[argc-1]);
         }
     }
 
@@ -157,7 +159,26 @@ int main(int argc, char *argv[])
     scrollok(stdscr, FALSE);
 
     srand (time(NULL));
-	int select = (NTH == 1) ? num_in : rand() % 7;
+
+	
+	int select = 0;
+	if(NTH == 1) {
+		select = num_in;
+	} 
+	else if(D51 == 1) {
+		select = 4;
+	}
+	else if(LOGO == 1) {
+		select = 5;
+	}
+	else if(C51 == 1) {
+		select = 6;
+	}
+	else if(SS == 1) {
+		select = 7;
+	} else {
+		select = rand() % 7;
+	}
 
     char* file_name = NULL;
     switch(select) {
@@ -175,15 +196,27 @@ int main(int argc, char *argv[])
 			break;
         case 4:
             D51	= 1;
+			LOGO = 0;
+			C51 = 0;
+			SS = 0;
             break;
         case 5:
-            LOGO = 1;
+            D51	= 0;
+			LOGO = 1;
+			C51 = 0;
+			SS = 0;
             break;
         case 6:
-            C51 = 1;
+            D51	= 0;
+			LOGO = 0;
+			C51 = 1;
+			SS = 0;
             break;
         case 7:
-            SS = 1;
+            D51	= 0;
+			LOGO = 0;
+			C51 = 0;
+			SS = 1;
             break;
 		default:
             mvcur(0, COLS - 1, LINES - 1, 0);
@@ -194,7 +227,6 @@ int main(int argc, char *argv[])
     }
 
     std::vector<std::string> rows;
-    // we don't need to attempt reading from file if no file was chosen.
     if(file_name != NULL){
         std::ifstream in(file_name);
         std::string line;
@@ -230,7 +262,8 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-int add_rnd(int x, std::vector<std::string> rows) {
+int add_rnd(int x, std::vector<std::string> rows) 
+{
     std::string str(rows[0]);
     int row_length = (int) str.size();
 
