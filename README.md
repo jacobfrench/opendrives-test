@@ -16,6 +16,6 @@ New features added on 2021/02/06
 - sl -c displays C51 train
 - sl -l displays LOGO train
 - sl -n <0-7> displays vehicle by index
-- sl -ss displays animated space ship
+- sl -s displays animated space ship
 - sl -F vehicle will fly
 - sl -h show usage menu

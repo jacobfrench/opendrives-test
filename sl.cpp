@@ -128,7 +128,7 @@ void print_usage()
 	printf("\t-c\t\t\t\tdisplays C51 train\n");
     printf("\t-l\t\t\t\tdisplays LOGO train\n");
 	printf("\t-n <0-7>\t\t\tdisplays vehicle by index\n");
-	printf("\t-ss\t\t\t\tdisplays animated space ship\n");
+	printf("\t-s\t\t\t\tdisplays animated space ship\n");
 	printf("\t-F\t\t\t\tvehicle will fly\n");
 	printf("\t-h\t\t\t\tshow usage\n"); 
 }
@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
 
     srand (time(NULL));
 
-	
+
 	int select = 0;
 	if(NTH == 1) {
 		select = num_in;
