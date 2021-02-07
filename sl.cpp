@@ -124,7 +124,7 @@ void print_usage()
 	printf("usage:\n");
 	printf("\tno params \t\t\tdisplays random vehicle\n");
 	printf("\t-t\t\t\t\tdisplays D51 train\n");
-	printf("\t-a\t\t\t\tdisplays D51 train with accident\n");
+	printf("\t-a\t\t\t\tdisplays man in train\n");
 	printf("\t-c\t\t\t\tdisplays C51 train\n");
     printf("\t-l\t\t\t\tdisplays LOGO train\n");
 	printf("\t-n <0-7>\t\t\tdisplays vehicle by index\n");
@@ -157,9 +157,7 @@ int main(int argc, char *argv[])
     nodelay(stdscr, TRUE);
     leaveok(stdscr, TRUE);
     scrollok(stdscr, FALSE);
-
-    srand (time(NULL));
-
+	signal(SIGINT, signal_callback_handler);
 
 	int select = 0;
 	if(NTH == 1) {
@@ -177,6 +175,7 @@ int main(int argc, char *argv[])
 	else if(SS == 1) {
 		select = 7;
 	} else {
+		srand (time(NULL));
 		select = rand() % 7;
 	}
 
@@ -227,7 +226,7 @@ int main(int argc, char *argv[])
     }
 
     std::vector<std::string> rows;
-    if(file_name != NULL){
+    if(file_name != NULL) {
         std::ifstream in(file_name);
         std::string line;
         while(std::getline(in, line)) {
@@ -237,7 +236,6 @@ int main(int argc, char *argv[])
     }
 
     for (x = COLS - 1; ; --x) {
-		signal(SIGINT, signal_callback_handler);
         if (LOGO == 1) {
             if (add_sl(x) == ERR) break;
         }
